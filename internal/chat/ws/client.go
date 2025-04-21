@@ -63,7 +63,7 @@ func (c *Client) readPump() {
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 		log.Infof("message received from client %s: %s", c.conn.RemoteAddr(), string(message))
-		c.hub.broadcast <- message
+		c.hub.broadcast <- Message{Sender: c, Content: message} // Передаем отправителя
 	}
 }
 

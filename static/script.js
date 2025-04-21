@@ -74,12 +74,13 @@ window.onload = function () {
         appendLog(item);
       };
       conn.onmessage = function (evt) {
-        const messages = evt.data.split('\n');
-        for (let i = 0; i < messages.length; i++) {
-          if (messages[i] !== lastSentMessage) {
-            addMessage("user2", messages[i]);
-          }
-        }
+        const data = JSON.parse(evt.data); 
+        const sender = data.sender;
+        const message = data.content;
+
+        const username = sender === conn.url ? "user1" : "user2";
+
+        addMessage(username, message);
       };
     } else {
       var item = document.createElement("div");
