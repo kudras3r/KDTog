@@ -15,10 +15,12 @@ RUN adduser -D appuser
 
 WORKDIR /home/appuser
 COPY --from=build /app/app .
-COPY static/ ./static/
+COPY --from=build /app/static ./static/
 
 RUN chown -R appuser:appuser /home/appuser
 
 USER appuser
+
+EXPOSE 8080
 
 CMD ["./app"]

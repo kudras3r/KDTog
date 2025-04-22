@@ -74,11 +74,16 @@ window.onload = function () {
         appendLog(item);
       };
       conn.onmessage = function (evt) {
-        const messages = evt.data.split('\n');
-        for (let i = 0; i < messages.length; i++) {
-          if (messages[i] !== lastSentMessage) {
-            addMessage("user2", messages[i]);
-          }
+        try {
+          const data = JSON.parse(evt.data); 
+          const sender = data.sender;
+          const message = data.content;
+      
+          const username = sender === conn.url ? "user1" : "user2";
+      
+          addMessage(username, message);
+        } catch (error) {
+          console.error("Failed to parse message:", evt.data, error);
         }
       };
     } else {
@@ -88,10 +93,15 @@ window.onload = function () {
     }
   };
 
-  // переключатель
+
+
   const toggle = document.getElementById('theme-switch');
 
   toggle.addEventListener('change', () => {
     document.body.classList.toggle('light-theme');
   });
   
+
+
+
+

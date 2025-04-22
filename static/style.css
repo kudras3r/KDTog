@@ -2,7 +2,11 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Orbitron', sans-serif;
+
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('back3.jpg') no-repeat center center fixed;
+
+  background: url('back.jpg') no-repeat center center fixed;
+
   background-size: cover;
   color: #ffffff;
   backdrop-filter: blur(3px);
