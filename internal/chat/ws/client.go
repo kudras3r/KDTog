@@ -2,6 +2,7 @@ package ws
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/http"
 	"time"
 
@@ -32,6 +33,11 @@ type Client struct {
 	hub  *Hub
 	conn *websocket.Conn
 	send chan []byte
+}
+
+type OutgoingMessage struct {
+	Sender  string `json:"sender"`
+	Content string `json:"content"`
 }
 
 func SetLogger(l *logger.Logger) {
@@ -84,19 +90,22 @@ func (c *Client) writePump() {
 				return
 			}
 
+			outgoingMessage := OutgoingMessage{
+				Sender:  c.conn.RemoteAddr().String(),
+				Content: string(message),
+			}
+			jsonMessage, err := json.Marshal(outgoingMessage)
+			if err != nil {
+				log.Errorf("error marshalling message for client %s: %v", c.conn.RemoteAddr(), err)
+				return
+			}
+
 			w, err := c.conn.NextWriter(websocket.TextMessage)
 			if err != nil {
 				log.Errorf("error creating writer for client %s: %v", c.conn.RemoteAddr(), err)
 				return
 			}
-			w.Write(message)
-			log.Infof("message sent to client %s: %s", c.conn.RemoteAddr(), string(message))
-			n := len(c.send)
-			for i := 0; i < n; i++ {
-				w.Write(newline)
-				w.Write(<-c.send)
-			}
-
+			w.Write(jsonMessage)
 			if err := w.Close(); err != nil {
 				log.Errorf("error closing writer for client %s: %v", c.conn.RemoteAddr(), err)
 				return

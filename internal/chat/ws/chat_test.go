@@ -18,13 +18,11 @@ func TestWebSocketBroadcast(t *testing.T) {
 	hub := NewHub(log)
 	go hub.Run()
 
-	// Создаем тестовый сервер
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ServeWs(hub, w, r)
 	}))
 	defer server.Close()
 
-	// Подключаем клиентов
 	url := "ws" + server.URL[4:] + "/ws"
 	clientCount := 3
 	clients := make([]*websocket.Conn, clientCount)
@@ -38,13 +36,11 @@ func TestWebSocketBroadcast(t *testing.T) {
 		defer clients[i].Close()
 	}
 
-	// Отправляем сообщение от первого клиента
 	message := "hello from client 1"
 	if err := clients[0].WriteMessage(websocket.TextMessage, []byte(message)); err != nil {
 		t.Fatalf("failed to send message from client 1: %v", err)
 	}
 
-	// Проверяем, что остальные клиенты получили сообщение
 	var wg sync.WaitGroup
 	wg.Add(clientCount - 1)
 
@@ -62,10 +58,8 @@ func TestWebSocketBroadcast(t *testing.T) {
 		}(i)
 	}
 
-	// Ждем завершения всех проверок
 	wg.Wait()
 
-	// Проверяем, что первый клиент не получил свое сообщение обратно
 	clients[0].SetReadDeadline(time.Now().Add(1 * time.Second))
 	_, _, err = clients[0].ReadMessage()
 	if err == nil {

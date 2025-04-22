@@ -74,13 +74,17 @@ window.onload = function () {
         appendLog(item);
       };
       conn.onmessage = function (evt) {
-        const data = JSON.parse(evt.data); 
-        const sender = data.sender;
-        const message = data.content;
-
-        const username = sender === conn.url ? "user1" : "user2";
-
-        addMessage(username, message);
+        try {
+          const data = JSON.parse(evt.data); 
+          const sender = data.sender;
+          const message = data.content;
+      
+          const username = sender === conn.url ? "user1" : "user2";
+      
+          addMessage(username, message);
+        } catch (error) {
+          console.error("Failed to parse message:", evt.data, error);
+        }
       };
     } else {
       var item = document.createElement("div");
@@ -88,3 +92,6 @@ window.onload = function () {
       appendLog(item);
     }
   };
+
+
+
