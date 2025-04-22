@@ -76,7 +76,7 @@ func (c *Client) readPump() {
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 		log.Infof("message received from client %s: %s", c.conn.RemoteAddr(), string(message))
-		c.hub.broadcast <- Message{Sender: c, Content: message} // Передаем отправителя
+		c.hub.broadcast <- Message{Sender: c, Content: message}
 	}
 }
 
@@ -87,6 +87,7 @@ func (c *Client) writePump() {
 		c.conn.Close()
 		log.Infof("stopped writePump for client %s", c.conn.RemoteAddr())
 	}()
+
 	for {
 		select {
 		case message, ok := <-c.send:
