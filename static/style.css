@@ -3,9 +3,9 @@ body {
   padding: 0;
   font-family: 'Orbitron', sans-serif;
 
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('back3.jpg') no-repeat center center fixed;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('back_dark.jpg') no-repeat center center fixed;
 
-  background: url('back.jpg') no-repeat center center fixed;
+  background: url('back_dark.jpg') no-repeat center center fixed;
 
   background-size: cover;
   color: #ffffff;
@@ -169,7 +169,7 @@ input[type="submit"]:hover {
 }
 
 body.light-theme {
-  background: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url('back6_light.jpg') no-repeat center center fixed;
+  background: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url('back_light.jpg') no-repeat center center fixed;
   background-size: cover;
   color: #000000;
 }

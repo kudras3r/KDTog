@@ -7,15 +7,17 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/kudras3r/KDTog/pkg/config"
 	"github.com/kudras3r/KDTog/pkg/logger"
 )
 
 const (
-	writeWait      = 10 * time.Second
-	pongWait       = 60 * time.Second
-	pingPeriod     = (pongWait * 9) / 10
-	maxMessageSize = 512
+	writeWait  = 10 * time.Second
+	pongWait   = 60 * time.Second
+	pingPeriod = (pongWait * 9) / 10
 )
+
+var maxMessageSize int64
 
 var log *logger.Logger
 
@@ -24,10 +26,7 @@ var (
 	space   = []byte{' '}
 )
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-}
+var upgrader websocket.Upgrader
 
 type Client struct {
 	hub  *Hub
@@ -42,6 +41,14 @@ type OutgoingMessage struct {
 
 func SetLogger(l *logger.Logger) {
 	log = l
+}
+
+func SetConfig(config config.WSock) {
+	upgrader = websocket.Upgrader{
+		ReadBufferSize:  config.RWBuffSize,
+		WriteBufferSize: config.RWBuffSize,
+	}
+	maxMessageSize = int64(config.MaxMessSize)
 }
 
 func (c *Client) readPump() {

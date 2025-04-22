@@ -12,7 +12,7 @@ import (
 )
 
 func TestWebSocketBroadcast(t *testing.T) {
-	log := logger.New()
+	log := logger.New("debug")
 	SetLogger(log)
 
 	hub := NewHub(log)
