@@ -2,11 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Orbitron', sans-serif;
-
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('back_dark.jpg') no-repeat center center fixed;
-
-  background: url('back_dark.jpg') no-repeat center center fixed;
-
   background-size: cover;
   color: #ffffff;
   backdrop-filter: blur(3px);
@@ -15,10 +11,10 @@ body {
 .container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-  max-width: 1280px;
+  justify-content: center;
+  align-items: stretch;
+  width: 95%;
+  max-width: none;
   margin: 20px auto;
   gap: 20px;
   padding: 20px;
@@ -31,8 +27,8 @@ body {
 
 .video-container {
   flex: 2;
-  width: 800px;
-  height: 450px;
+  aspect-ratio: 16 / 9;
+  width: auto;
   border: 2px solid #37E8C2;
   border-radius: 12px;
   overflow: hidden;
@@ -47,8 +43,8 @@ body {
 
 .chat-container {
   flex: 1;
-  width: 400px;
-  height: 450px;
+  height: auto;
+  max-width: 34%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -60,7 +56,27 @@ body {
   box-sizing: border-box;
 }
 
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
 
+  .video-container, .chat-container {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .video-container {
+    aspect-ratio: 16 / 9;
+  }
+
+  .chat-container {
+    margin-top: 20px;
+    height: auto; 
+  }
+}
 
 #log {
   flex: 1;
@@ -188,4 +204,16 @@ body.light-theme #log {
 body.light-theme #msg {
   background: #f0f0f0;
   color: #6F1EE1;
+}
+
+
+body.light-theme input[type="submit"] {
+  background: #6F1EE1; 
+  color: #fff;
+}
+
+
+body.light-theme input[type="submit"]:hover {
+  background: #37E8C2; 
+  box-shadow: 0 0 10px #37E8C2; 
 }
