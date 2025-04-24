@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>KDAuth</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 50px;
+    }
+    form {
+      max-width: 300px;
+      margin: auto;
+    }
+    input {
+      display: block;
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 8px;
+      font-size: 16px;
+    }
+    .error {
+      color: red;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Sign in</h2>
+
+  <form id="authForm">
+    <input type="text" id="username" name="username" placeholder="username" required />
+    <input type="password" id="password" name="password" placeholder="password" required />
+    <button type="submit">Войти</button>
+  </form>
+  
+  <script>
+    const form = document.getElementById('authForm');
+  
+    form.addEventListener('submit', function(event) {
+      event.preventDefault(); 
+  
+      const data = {
+        username: form.username.value,
+        password: form.password.value
+      };
+  
+      fetch('/auth', { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Ошибка сети');
+        }
+        return response.json(); 
+      })
+      .then(result => {
+        console.log('Ответ сервера:', result);
+      })
+      .catch(error => {
+        console.error('Ошибка при отправке:', error);
+      });
+    });
+  </script>
+  
+
+</body>
+</html>

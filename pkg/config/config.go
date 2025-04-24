@@ -13,6 +13,7 @@ type Config struct {
 	Server   Server `env:"SERVER"`
 	WSock    WSock  `env:"WS"`
 	LogLevel string `env:"LOG_LEVEL"`
+	StDir    string `env:"STORAGE_DIR"`
 }
 
 type Server struct {

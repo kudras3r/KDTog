@@ -6,6 +6,7 @@ import (
 
 	"github.com/kudras3r/KDTog/internal/chat/ws"
 	"github.com/kudras3r/KDTog/internal/server"
+	"github.com/kudras3r/KDTog/internal/storage"
 	"github.com/kudras3r/KDTog/pkg/config"
 	"github.com/kudras3r/KDTog/pkg/logger"
 )
@@ -25,13 +26,20 @@ func main() {
 		config.WSock.RWBuffSize, config.WSock.RWBuffSize)
 	log.Infof("max message size: %d", config.WSock.MaxMessSize)
 
+	// init storage
+	var db storage.Storage
+	db, err := storage.NewFStorage(log, config.StDir)
+	if err != nil {
+		log.Fatalf("cannot init storage: %v", err)
+	}
+
 	// init hub
 	hub := ws.NewHub(log)
 	log.Info("starting hub")
 	go hub.Run()
 
 	// init router
-	r := server.NewRouter(hub, log)
+	r := server.NewRouter(log, hub, db)
 
 	// run server
 	log.Infof("starting server on %s:%s", config.Server.Host, config.Server.Port)

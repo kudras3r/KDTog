@@ -6,17 +6,18 @@ import (
 	"github.com/kudras3r/KDTog/pkg/logger"
 )
 
-func authMiddleware(next http.Handler, log *logger.Logger) http.Handler {
-	// ! TODO
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cookie, err := r.Cookie("auth_token")
+var tokens map[string]string
 
-		if err != nil || cookie.Value != "asdasd" {
-			log.Errorf("auth error : %v", err)
-			http.Error(w, "unauthorized", http.StatusUnauthorized)
+func authMiddleware(next http.Handler, log *logger.Logger) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		loc := GLOC + "authMiddleware()"
+		cookie, err := r.Cookie("auth_token")
+		if err != nil || cookie.Value != "123" {
+			log.Warnf("auth error at %s: %v", loc, err)
+			http.Redirect(w, r, "/auth", http.StatusPermanentRedirect)
 			return
 		}
-
+		log.Infof("%s checked auth_token %s for %s", loc, cookie.Value, r.RemoteAddr)
 		next.ServeHTTP(w, r)
 	})
 }
