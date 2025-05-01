@@ -1,6 +1,34 @@
 package storage
 
+/*
+
+	At this point, we use simple file-based storage.
+	There are two main dict-like files:
+		1. name -> id
+		2. id -> pHash
+	We use a simple line-based format for the files:
+		1. name    :id
+		2. id      :pHash
+
+		All names are unique.
+		All ids are unique.
+		All pHashes are unique.
+		All names are sorted in the file. It is point why we use bsearch.
+		All ids are sorted in the file.
+
+		Result complexity of GetIDByName is O(log(n)).
+		Result complexity of GetPHashByID is O(1).
+
+	Max lens for name and id look at conts below.
+	Max len for line in file (1) is MAXNLEN + len(':')=1 + MAXILEN + len('\n')=1,
+	Where N - name, I - id
+
+
+*/
+
 import (
+	"crypto/sha256"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -8,19 +36,6 @@ import (
 
 	"github.com/kudras3r/KDTog/pkg/logger"
 )
-
-/*
-	At this point, we use simple file-based storage.
-	There are two main dict-like files:
-		1. name -> id
-		2. id -> pHash
-	We use a simple line-based format for the files:
-		1. name:id
-		2. id:pHash
-	Max lens for name and id look at conts below.
-	Max len for line in file (1) is MAXNLEN + len(':')=1 + MAXILEN + len('\n')=1,
-	Where N - name, I - id
-*/
 
 const (
 	WSB = ' '
@@ -64,6 +79,39 @@ func NewFStorage(log *logger.Logger, dir string) (*FStorage, error) {
 }
 
 func (s *FStorage) AddUser(name, pass string) error {
+	loc := GLOC + "AddUser()"
+
+	s.log.Infof("AddUser(%s, %s)", name, pass)
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	//! TODO
+
+	file, err := os.OpenFile(s.dir+ITH_FILENAME, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	if err != nil {
+		s.log.Errorf("cannot open file %s at %s: %v", s.dir+ITH_FILENAME, loc, err)
+		return fmt.Errorf("failed to open file: %v", err)
+	}
+	defer file.Close()
+
+	h := sha256.Sum256([]byte(pass))
+
+	var data [36]byte
+	data[0] = byte('0')
+	data[1] = byte(' ')
+	data[2] = byte(':')
+	i := 3
+	for _, b := range h {
+		data[i] = b
+		i++
+	}
+	data[i] = byte('\n')
+
+	_, err = file.Write(data[:])
+	if err != nil {
+		return fmt.Errorf("failed to write to file: %v", err)
+	}
+
 	return nil
 }
 
@@ -102,7 +150,7 @@ func (s *FStorage) GetIDByName(name string) (uint8, error) {
 
 	file, err := os.Open(s.dir + NTID_FILENAME)
 	if err != nil {
-		s.log.Errorf("cannot open file %s: %v", loc, err)
+		s.log.Errorf("cannot open file %s at %s: %v", s.dir+NTID_FILENAME, loc, err)
 		return 0, ErrWhenOpenFile(loc)
 	}
 	defer file.Close()

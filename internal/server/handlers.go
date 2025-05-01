@@ -25,7 +25,7 @@ func indexHandler(log *logger.Logger) func(http.ResponseWriter, *http.Request) {
 }
 
 func authHandler(log *logger.Logger, db storage.Storage) func(http.ResponseWriter, *http.Request) {
-	loc := GLOC + "getAuthHandler()"
+	loc := GLOC + "authHandler()"
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
@@ -58,6 +58,13 @@ func authHandler(log *logger.Logger, db storage.Storage) func(http.ResponseWrite
 			if phash == db.GetPHashByID(uid) {
 				w.WriteHeader(http.StatusOK)
 				fmt.Fprintf(w, `{"status":"success","message":"Успешный вход"}`)
+				cookie := &http.Cookie{
+					Name:  "auth_token",
+					Value: "123",
+					Path:  "/",
+				}
+				http.SetCookie(w, cookie)
+				http.Redirect(w, r, "/", http.StatusSeeOther)
 			}
 
 		}

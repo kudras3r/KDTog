@@ -43,9 +43,7 @@ func main() {
 
 	// run server
 	log.Infof("starting server on %s:%s", config.Server.Host, config.Server.Port)
-	if err := http.ListenAndServe(
-		fmt.Sprintf("%s:%s", config.Server.Host, config.Server.Port),
-		r); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", config.Server.Port), r); err != nil {
 		log.Fatalf("failed to start server: %v", err)
 	}
 }

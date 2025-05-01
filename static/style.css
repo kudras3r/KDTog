@@ -217,3 +217,11 @@ body.light-theme input[type="submit"]:hover {
   background: #37E8C2; 
   box-shadow: 0 0 10px #37E8C2; 
 }
+
+.chat-container {
+  max-height: 400px; 
+  overflow-y: auto;  
+  border: 1px solid #ccc; 
+  padding: 10px;
+  box-sizing: border-box;
+}

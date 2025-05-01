@@ -43,6 +43,7 @@ func Load() *Config {
 		log.Fatal("cannot get server env vars: ", err)
 	}
 	config.LogLevel = os.Getenv("LOG_LEVEL")
+	config.StDir = os.Getenv("STORAGE_DIR")
 
 	config.WSock = wsockConfig
 	config.Server = serverConfig

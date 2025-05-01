@@ -16,6 +16,7 @@ RUN adduser -D appuser
 WORKDIR /home/appuser
 COPY --from=build /app/app .
 COPY --from=build /app/static ./static/
+COPY --from=build /app/.env .env
 
 RUN chown -R appuser:appuser /home/appuser
 

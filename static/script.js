@@ -22,10 +22,10 @@ window.onload = function () {
       messageElement.classList.add("message");
   
       
-      if (username === "user1") {
-        messageElement.classList.add("user1");
+      if (username === "ME") {
+        messageElement.classList.add("ME");
       } else {
-        messageElement.classList.add("user2");
+        messageElement.classList.add("YOU");
       }
   
       var usernameElement = document.createElement("div");
@@ -58,7 +58,7 @@ window.onload = function () {
       const message = msg.value;
       conn.send(message);
   
-      addMessage("user1", message);
+      addMessage("ME", message);
   
       lastSentMessage = message;
   
@@ -79,7 +79,7 @@ window.onload = function () {
           const sender = data.sender;
           const message = data.content;
       
-          const username = sender === conn.url ? "user1" : "user2";
+          const username = sender === conn.url ? "ME" : "YOU";
       
           addMessage(username, message);
         } catch (error) {
